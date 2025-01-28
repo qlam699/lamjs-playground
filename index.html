@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta Tags -->
+  <title>JavaScript Playground - Online JS Code Editor and Runner</title>
+  <meta name="description"
+    content="Free online JavaScript playground to write, test, and run JS code in real-time. Features include syntax highlighting, code formatting, and live console output.">
+  <meta name="keywords"
+    content="JavaScript playground, JS editor, code editor, JavaScript editor, online JavaScript editor, JS code runner, JavaScript testing">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="JavaScript Playground - Online JS Code Editor">
+  <meta property="og:description"
+    content="Write, test, and run JavaScript code in real-time with this free online playground.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JS Playground">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JavaScript Playground - Online JS Code Editor">
+  <meta name="twitter:description"
+    content="Write, test, and run JavaScript code in real-time with this free online playground.">
+
+  <!-- Existing scripts and styles -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prettier/2.8.8/standalone.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prettier/2.8.8/parser-babel.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Add these new script tags after the existing CodeMirror scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closetag.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/javascript-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/search.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/searchcursor.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/match-highlighter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/comment/comment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.js"></script>
+
+  <!-- Add these new style tags -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
+
+  <!-- Add this after the existing link tags in the head section -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
+
+  <style>
+    /* Apply FiraCode to the entire app */
+    body {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Existing styles */
+    .resizer {
+      width: 8px;
+      cursor: col-resize;
+      background-color: #4b5563;
+      transition: all 0.2s ease;
+      margin: 0 -2px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .resizer::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      height: 100%;
+      width: 2px;
+      background-color: #6b7280;
+      transition: all 0.2s ease;
+    }
+
+    .resizer:hover::after,
+    .resizer.dragging::after {
+      width: 6px;
+      background-color: #60a5fa;
+    }
+
+    /* Update button text styles */
+    button, 
+    label,
+    .text-xl {
+      font-family: 'Fira Code', monospace;
+      font-feature-settings: "calt" 0; /* Disable ligatures for UI text */
+    }
+
+    .editor-container,
+    .output-container {
+      height: calc(100vh - 100px);
+      overflow: hidden;
+    }
+
+    .CodeMirror {
+      height: 100% !important;
+      font-family: 'Fira Code', monospace !important;
+      font-feature-settings: "calt" 1;  /* Enable ligatures */
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Optional: Style the font loading */
+    @supports (font-variation-settings: normal) {
+      .CodeMirror {
+        font-family: 'Fira Code VF', monospace !important;
+      }
+    }
+
+    /* Ensure consistent font in the output iframe */
+    #output {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Prevent text selection while resizing */
+    .resizer.dragging,
+    .resizer.dragging * {
+      cursor: col-resize !important;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+  <div class="h-full w-full">
+    <header class="flex justify-between items-center p-4">
+      <div class="space-x-1 flex items-center gap-2">
+        <button id="formatButton" 
+          class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm font-medium"
+          aria-label="Format code" 
+          tabindex="0">
+          Format Code
+        </button>
+        <button id="runButton" 
+          class="p-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-sm font-medium"
+          aria-label="Run code" 
+          tabindex="0">
+          Run Code
+        </button>
+        <label class="ml-4 inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="autorunToggle" class="sr-only peer" checked>
+          <div class="relative w-11 h-6 bg-gray-600 peer-checked:bg-green-600 rounded-full peer 
+                      peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] 
+                      after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 
+                      after:transition-all">
+          </div>
+          <span class="ml-2 text-sm font-medium">Autorun</span>
+        </label>
+      </div>
+      <h1 class="text-xl font-bold tracking-tight">LamJS Playground</h1>
+    </header>
+
+    <div class="flex">
+      <div id="editorPane" class="editor-container w-1/2">
+        <textarea id="editor"></textarea>
+      </div>
+
+      <div id="resizer" class="resizer" role="separator" aria-label="Resize panels"></div>
+
+      <div id="outputPane" class="output-container w-1/2">
+        <iframe id="output" class="w-full h-full bg-white rounded" title="Code output">
+        </iframe>
+      </div>
+    </div>
+    <footer id="errorFooter" class="fixed bottom-0 left-0 right-0 bg-red-500 text-white px-4 py-3 transform translate-y-full transition-transform duration-300 ease-in-out z-50">
+      <div class="flex items-center gap-3 max-w-screen-xl mx-auto">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <div class="flex-1">
+          <pre id="errorMessage" class="text-sm font-medium font-mono whitespace-pre-wrap break-words"></pre>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
